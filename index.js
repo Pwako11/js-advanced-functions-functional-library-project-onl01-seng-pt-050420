@@ -5,9 +5,9 @@ const fi = (function() {
     },
   
     each: function(collection, callback) {
-      const newCollection = (function() { 
+      const newCollection = collection  
         if (Array.isArray(collection)){
-          for (let i = 0; newCollection.length; i++){
+          for (let i = 0; i < newCollection.length; i++){
             callback(newCollection[i], i, collection)
           } 
         }else if(typeof(collection) === "object"){
@@ -21,8 +21,32 @@ const fi = (function() {
       //       callback(collection[key], key, collection)
       //     }
       //   }
-     }) 
+      
       return collection
+    },
+
+    map: function(collection, callback) {
+      
+      let newCollection = [];
+
+      if(Array.isArray(collection)) {
+        for(let i=0; i< collection.length; i++){
+          newCollection.push(callback(collection[i], i, collection));
+        }
+      } else if(typeof(collection) === "object") {
+        let keys = Object.keys(collection);
+        for (let i = 0; i < keys.length; i++) {
+          newCollection.push(callback(collection[keys[i]], keys[i], collection))
+        } 
+      }
+      return newCollection
+    },
+    
+    reduce: function(collection, callback, acc = 0) {
+      for( let i = 0; i < collection.length; i++) {
+        acc = callback(acc, collection[i], collection)
+      }
+      return acc
     }
 }
 
